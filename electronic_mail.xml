@@ -1,0 +1,320 @@
+<?xml version="1.0"?>
+<!-- This file is part of Tryton.  The COPYRIGHT file at the top level of
+this repository contains the full copyright notices and license terms. -->
+<tryton>
+  <data>
+    <menuitem name="Email Management" sequence="10" 
+      id="menu_email_management" parent="res.menu_res"/>
+    <record model="res.group" id="group_email_admin">
+      <field name="name">Electronic Mail Administrator</field>
+    </record>
+    <record model="res.group" id="group_email_user">
+      <field name="name">Electronic Mail User</field>
+    </record>
+    <record model="res.user" id="res.user_admin">
+      <field name="groups" eval="[('add', ref('group_email_user')), ('add', ref('group_email_admin'))]"/>
+    </record>
+
+    <record model="ir.ui.view" id="mailbox_view_tree">
+      <field name="model">electronic_mail.mailbox</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <![CDATA[
+	        <tree string="Mailboxes">
+	        <field name="name" select="1"/>
+	        <field name="user" select="1"/>
+	        </tree>
+        ]]>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="mailbox_view_form">
+      <field name="model">electronic_mail.mailbox</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <![CDATA[
+      <form string="Mailbox">
+        <group colspan="4" id="wrapper">
+          <label name="name"/>
+          <field name="name"/>
+          <label name="user"/>
+          <field name="user"/>
+          <label name="subscribed"/>
+          <field name="subscribed"/>
+        </group>
+        <notebook colspan="4">
+          <page string="Parents" id="parents">
+            <field name="parents"/>
+          </page>
+          <page string="Permissions" id="permissions">
+            <separator name="read_users" colspan="4"/>
+            <field name="read_users"/>
+            <separator name="write_users" colspan="4"/>
+            <field name="write_users"/>
+          </page>
+        </notebook>
+      </form>
+      ]]>
+      </field>
+    </record>
+    <record model="ir.action.act_window" id="act_mailbox_form">
+      <field name="name">Mailboxes</field>
+      <field name="res_model">electronic_mail.mailbox</field>
+      <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_mailbox_form_view1">
+      <field name="sequence" eval="10"/>
+      <field name="view" ref="mailbox_view_tree"/>
+      <field name="act_window" ref="act_mailbox_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_mailbox_form_view2">
+      <field name="sequence" eval="20"/>
+      <field name="view" ref="mailbox_view_form"/>
+      <field name="act_window" ref="act_mailbox_form"/>
+    </record>
+    <menuitem id="menu_mailbox" action="act_mailbox_form" 
+      parent="menu_email_management"/>
+
+    <record model="ir.ui.view" id="headers_view_tree">
+      <field name="model">electronic_mail.header</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+      <![CDATA[
+        <tree string="Headers">
+          <field name="name" select="1"/>
+          <field name="value" select="1"/>
+        </tree>
+	    ]]>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="mail_view_tree">
+      <field name="model">electronic_mail</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+      <![CDATA[
+      <tree string="Emails">
+        <field name="flag_seen" select="2"/>
+        <field name="flag_flagged" select="2"/>
+        <field name="flag_answered" select="2"/>
+        <field name="from_" select="1"/>
+        <field name="subject" select="1"/>
+        <field name="date" select="1"/>
+      </tree>
+	    ]]>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="mail_view_form">
+      <field name="model">electronic_mail</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <![CDATA[
+      <form string="Email">
+        <group colspan="4" id="master_fields">
+          <label name="from_"/>
+          <field name="from_"/>
+          <label name="date"/>
+          <field name="date"/>
+          <label name="to"/>
+          <field name="to"/>
+          <label name="in_reply_to"/>
+          <field name="in_reply_to"/>
+          <label name="cc"/>
+          <field name="cc"/>
+          <label name="bcc"/>
+          <field name="bcc"/>
+          <label name="subject"/>
+          <field name="subject"/>
+          <label name="mailbox"/>
+          <field name="mailbox"/>
+        </group>
+        <group colspan="4" col="10" id="flags_area">
+          <label name="flag_seen"/>
+          <field name="flag_seen"/>
+          <label name="flag_flagged"/>
+          <field name="flag_flagged"/>
+          <label name="flag_answered"/>
+          <field name="flag_answered"/>
+          <label name="flag_draft"/>
+          <field name="flag_draft"/>
+          <label name="flag_recent"/>
+          <field name="flag_recent"/>
+        </group>
+        <separator name="email" colspan="4"/>
+        <field name="email"/>
+      </form>
+      ]]>
+      </field>
+    </record>
+    <record model="ir.action.act_window" id="act_mail_form">
+      <field name="name">Emails</field>
+      <field name="res_model">electronic_mail</field>
+      <field name="view_type">form</field>
+    </record>
+    <record model="ir.action.act_window.view" id="act_mail_form_view1">
+      <field name="sequence" eval="10"/>
+      <field name="view" ref="mail_view_tree"/>
+      <field name="act_window" ref="act_mail_form"/>
+    </record>
+    <record model="ir.action.act_window.view" id="act_mail_form_view2">
+      <field name="sequence" eval="20"/>
+      <field name="view" ref="mail_view_form"/>
+      <field name="act_window" ref="act_mail_form"/>
+    </record>
+    
+    <menuitem id="menu_mail" action="act_mail_form" parent="menu_email_management"/>
+  
+    <!-- Access Rule Mailbox -->
+    <record model="ir.model.access" id="access_mailbox_admin">
+      <field name="model" search="[('model', '=', 'electronic_mail.mailbox')]"/>
+      <field name="group" ref="group_email_admin"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_delete" eval="True"/>
+    </record>
+    <record model="ir.model.access" id="access_mailbox_user">
+      <field name="model" search="[('model', '=', 'electronic_mail.mailbox')]"/>
+      <field name="group" ref="group_email_user"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_delete" eval="False"/>
+    </record>
+    <!-- Access Rule Mail -->
+    <record model="ir.model.access" id="access_mail_admin">
+      <field name="model" search="[('model', '=', 'electronic_mail')]"/>
+      <field name="group" ref="group_email_admin"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_delete" eval="True"/>
+    </record>
+    <record model="ir.model.access" id="access_mail_user">
+      <field name="model" search="[('model', '=', 'electronic_mail')]"/>
+      <field name="group" ref="group_email_user"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_delete" eval="True"/>
+    </record>
+
+    <!-- Rule to read mailboxes -->
+    <record model="ir.rule.group" id="rule_group_read_mailbox">
+      <field name="model" search="[('model', '=', 'electronic_mail.mailbox')]"/>
+      <field name="global_p" eval="True"/>
+      <field name="default_p" eval="False"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mailbox_line1">
+      <field name="field" 
+             search="[
+              ('name', '=', 'user'), 
+              ('model.model', '=', 'electronic_mail.mailbox')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mailbox"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mailbox_line2">
+      <field name="field" 
+             search="[
+              ('name', '=', 'read_users'), 
+              ('model.model', '=', 'electronic_mail.mailbox')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mailbox"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mailbox_line3">
+      <field name="field" 
+             search="[
+              ('name', '=', 'write_users'), 
+              ('model.model', '=', 'electronic_mail.mailbox')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mailbox"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mailbox_line4">
+      <field name="field" 
+             search="[
+              ('name', '=', 'create_uid'), 
+              ('model.model', '=', 'electronic_mail.mailbox')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mailbox"/>
+    </record>
+
+    <!-- Rule to read emails -->
+    <record model="ir.rule.group" id="rule_group_read_mail">
+      <field name="model" search="[('model', '=', 'electronic_mail')]"/>
+      <field name="global_p" eval="True"/>
+      <field name="default_p" eval="False"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_delete" eval="False"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mail_line1">
+      <field name="field" 
+             search="[
+              ('name', '=', 'mailbox_owner'), 
+              ('model.model', '=', 'electronic_mail')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mail"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mail_line2">
+      <field name="field" 
+             search="[
+              ('name', '=', 'mailbox_read_users'), 
+              ('model.model', '=', 'electronic_mail')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mail"/>
+    </record>
+    <record model="ir.rule" id="rule_group_read_mail_line3">
+      <field name="field" 
+             search="[
+              ('name', '=', 'mailbox_write_users'), 
+              ('model.model', '=', 'electronic_mail')
+             ]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_read_mail"/>
+    </record>
+
+    <!-- Rule to write emails -->
+    <record model="ir.rule.group" id="rule_group_write_mail">
+      <field name="model" search="[('model', '=', 'electronic_mail')]"/>
+      <field name="global_p" eval="True"/>
+      <field name="default_p" eval="False"/>
+      <field name="perm_read" eval="True"/>
+      <field name="perm_write" eval="True"/>
+      <field name="perm_create" eval="True"/>
+      <field name="perm_delete" eval="True"/>
+    </record>
+    <record model="ir.rule" id="rule_group_write_mail_line1">
+      <field name="field" search="[
+        ('name', '=', 'mailbox_owner'), 
+        ('model.model', '=', 'electronic_mail')]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_write_mail"/>
+    </record>
+    <record model="ir.rule" id="rule_group_write_mailbox_line2">
+      <field name="field" search="[
+        ('name', '=', 'mailbox_write_users'), 
+        ('model.model', '=', 'electronic_mail')]"/>
+      <field name="operator">=</field>
+      <field name="operand">User</field>
+      <field name="rule_group" ref="rule_group_write_mail"/>
+    </record>
+  </data>
+</tryton>
