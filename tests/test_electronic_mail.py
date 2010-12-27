@@ -13,7 +13,6 @@ import unittest
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
 from email.utils import formatdate
 
 import trytond.tests.test_tryton
@@ -42,22 +41,17 @@ class ElectronicMailTestCase(unittest.TestCase):
         """
         Creates a new user and returns the ID
         """
-        user_group_xml_ids = self.ir_model_data_obj.search(
-            [
-                ['OR',
-                    [('fs_id', '=', 'group_email_admin')],
-                    [('fs_id', '=', 'group_email_user')]
-                ],
-                [('module', '=', 'electronic_mail')]
-            ]
-        )
-        user_groups = self.ir_model_data_obj.browse(user_group_xml_ids)
+        group_email_admin_id =  self.ir_model_data_obj.get_id(
+            'electronic_mail', 'group_email_admin')
+        group_email_user_id =  self.ir_model_data_obj.get_id(
+            'electronic_mail', 'group_email_user')
+
         return self.user_obj.create(
             {
             'login': name,
             'name': name,
             'password': name,
-            'groups': [('set', [g.id for g in user_groups])]
+            'groups': [('set', [group_email_admin_id, group_email_user_id])]
             })
 
     def create_users(self, no_of_sets=1):
@@ -92,7 +86,7 @@ class ElectronicMailTestCase(unittest.TestCase):
             # Create Users for testing access
             user_set_1, user_set_2 = self.create_users(no_of_sets=2)
             # Create a mailbox with a user set
-            mailbox_1 = self.mailbox_obj.create(
+            self.mailbox_obj.create(
                 {
                     'name': 'Parent Mailbox',
                     'user': user_set_1[0],
@@ -101,7 +95,7 @@ class ElectronicMailTestCase(unittest.TestCase):
                     })
 
             # Create a mailbox 2 with RW users of set 1 + set 2
-            mailbox_2 = self.mailbox_obj.create(
+            self.mailbox_obj.create(
                 {
                     'name': 'Child Mailbox',
                     'user': user_set_2[0],
@@ -201,7 +195,7 @@ class ElectronicMailTestCase(unittest.TestCase):
         message.attach(part1)
         message.attach(part2)
 
-        with Transaction().start(DB_NAME, USER, CONTEXT) as transaction:
+        with Transaction().start(DB_NAME, USER, CONTEXT):
             mailbox = self.mailbox_obj.create(
                 {
                     'name': 'Mailbox',

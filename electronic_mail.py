@@ -261,6 +261,8 @@ class ElectronicMail(ModelSQL, ModelView):
         :param mailbox: ID of the mailbox
         """
         header_obj = self.pool.get('electronic_mail.header')
+        email_date = mail.get('date') and datetime.fromtimestamp(
+                mktime(parsedate(mail.get('date'))))
         values = {
             'mailbox': mailbox,
             'from_': mail.get('from'),
@@ -269,9 +271,7 @@ class ElectronicMail(ModelSQL, ModelView):
             'cc': mail.get('cc'),
             'bcc': mail.get('bcc'),
             'subject': mail.get('subject'),
-            'date': mail.get('date') and datetime.fromtimestamp(
-                mktime(parsedate(mail.get('date')))
-                ) or False,
+            'date': email_date,
             'message_id': mail.get('message-id'),
             'in_reply_to': mail.get('in-reply-to'),
             'email': mail.as_string(),
