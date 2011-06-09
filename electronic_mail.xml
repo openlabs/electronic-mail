@@ -59,7 +59,6 @@ this repository contains the full copyright notices and license terms. -->
     <record model="ir.action.act_window" id="act_mailbox_form">
       <field name="name">Mailboxes</field>
       <field name="res_model">electronic_mail.mailbox</field>
-      <field name="view_type">form</field>
     </record>
     <record model="ir.action.act_window.view" id="act_mailbox_form_view1">
       <field name="sequence" eval="10"/>
@@ -148,7 +147,6 @@ this repository contains the full copyright notices and license terms. -->
     <record model="ir.action.act_window" id="act_mail_form">
       <field name="name">Emails</field>
       <field name="res_model">electronic_mail</field>
-      <field name="view_type">form</field>
     </record>
     <record model="ir.action.act_window.view" id="act_mail_form_view1">
       <field name="sequence" eval="10"/>
