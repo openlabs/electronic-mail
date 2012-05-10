@@ -18,6 +18,7 @@ from email.utils import parsedate
 from trytond.model import ModelView, ModelSQL, fields
 from trytond.config import CONFIG
 from trytond.transaction import Transaction
+from trytond.pool import Pool
 
 
 class Mailbox(ModelSQL, ModelView):
@@ -260,7 +261,7 @@ class ElectronicMail(ModelSQL, ModelView):
         :param mail: email object
         :param mailbox: ID of the mailbox
         """
-        header_obj = self.pool.get('electronic_mail.header')
+        header_obj = Pool().get('electronic_mail.header')
         email_date = mail.get('date') and datetime.fromtimestamp(
                 mktime(parsedate(mail.get('date'))))
         values = {

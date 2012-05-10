@@ -5,14 +5,20 @@ this repository contains the full copyright notices and license terms. -->
   <data>
     <menuitem name="Email Management" sequence="10" 
       id="menu_email_management" parent="res.menu_res"/>
+
     <record model="res.group" id="group_email_admin">
       <field name="name">Electronic Mail Administrator</field>
     </record>
     <record model="res.group" id="group_email_user">
       <field name="name">Electronic Mail User</field>
     </record>
-    <record model="res.user" id="res.user_admin">
-      <field name="groups" eval="[('add', ref('group_email_user')), ('add', ref('group_email_admin'))]"/>
+    <record model="res.user-res.group" id="user_admin_group_email_admin">
+      <field name="user" ref="res.user_admin"/>
+      <field name="group" ref="group_email_admin"/>
+    </record>
+    <record model="res.user-res.group" id="user_admin_group_email_user">
+      <field name="user" ref="res.user_admin"/>
+      <field name="group" ref="group_email_user"/>
     </record>
 
     <record model="ir.ui.view" id="mailbox_view_tree">
@@ -21,8 +27,8 @@ this repository contains the full copyright notices and license terms. -->
       <field name="arch" type="xml">
         <![CDATA[
 	        <tree string="Mailboxes">
-	        <field name="name" select="1"/>
-	        <field name="user" select="1"/>
+	        <field name="name"/>
+	        <field name="user"/>
 	        </tree>
         ]]>
       </field>
@@ -79,8 +85,8 @@ this repository contains the full copyright notices and license terms. -->
       <field name="arch" type="xml">
       <![CDATA[
         <tree string="Headers">
-          <field name="name" select="1"/>
-          <field name="value" select="1"/>
+          <field name="name"/>
+          <field name="value"/>
         </tree>
 	    ]]>
       </field>
@@ -92,12 +98,12 @@ this repository contains the full copyright notices and license terms. -->
       <field name="arch" type="xml">
       <![CDATA[
       <tree string="Emails">
-        <field name="flag_seen" select="2"/>
-        <field name="flag_flagged" select="2"/>
-        <field name="flag_answered" select="2"/>
-        <field name="from_" select="1"/>
-        <field name="subject" select="1"/>
-        <field name="date" select="1"/>
+        <field name="flag_seen"/>
+        <field name="flag_flagged"/>
+        <field name="flag_answered"/>
+        <field name="from_"/>
+        <field name="subject"/>
+        <field name="date"/>
       </tree>
 	    ]]>
       </field>

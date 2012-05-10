@@ -16,8 +16,13 @@ from email.mime.text import MIMEText
 from email.utils import formatdate
 
 import trytond.tests.test_tryton
-from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT, test_view
+from trytond.tests.test_tryton import POOL, DB_NAME, USER, CONTEXT, \
+    test_view, test_depends
 from trytond.transaction import Transaction
+from trytond.config import CONFIG
+
+# Set a data path since the module stores email attachment content in data dir
+CONFIG['data_path'] = '/tmp/'
 
 USER_TYPES = ('owner_user_%s', 'read_user_%s', 'write_user_%s')
 
@@ -76,7 +81,10 @@ class ElectronicMailTestCase(unittest.TestCase):
         '''
         Test views.
         '''
-        self.assertRaises(Exception, test_view('electronic_mail'))
+        test_view('electronic_mail')
+
+    def test0010depends(self):
+        test_depends()
 
     def test0010mailbox_read_rights(self):
         '''
@@ -143,7 +151,7 @@ class ElectronicMailTestCase(unittest.TestCase):
 
             # Raise exception when writing a mail with the read user
             with Transaction().set_user(user_r):
-                self.failUnlessRaises(
+                self.assertRaises(
                     Exception, self.mail_obj.create,
                     ({
                         'from_': 'Test',
@@ -165,7 +173,8 @@ class ElectronicMailTestCase(unittest.TestCase):
             transaction.cursor.rollback()
 
     def test0030_email_message_extraction(self):
-        """The create from email functionality extracts info from
+        """
+        Create from email functionality extracts info from
         an email.message. Test the extraction for multiple types
         """
         # 1: multipart/alternative
