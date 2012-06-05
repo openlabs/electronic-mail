@@ -5,7 +5,7 @@
 {
     'name': 'Electronic Mail',
     'description': '''Electronic mail storage''',
-    'version': '2.4.0.1',
+    'version': '2.4.0.2',
     'author': 'Openlabs Technologies & Consulting (P) LTD',
     'email': 'info@openlabs.co.in',
     'website': 'http://openlabs.co.in/',
