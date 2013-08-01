@@ -281,7 +281,7 @@ class ElectronicMail(ModelSQL, ModelView):
             'email': mail.as_string(),
             'size': getsizeof(mail.as_string()),
             }
-        mail_created = cls.create(values)
+        mail_created = cls.create([values])[0]
         Header.create_from_email(mail, mail_created.id)
         return mail_created
 
@@ -300,12 +300,12 @@ class Header(ModelSQL, ModelView):
         :param mail: Email object
         :param mail_id: ID of the email from electronic_mail
         """
+        values = []
         for name, value in mail.items():
-            values = {
+            values.append({
                 'electronic_mail':mail_id,
                 'name':name,
                 'value':value,
-                }
-            cls.create(values)
-        return True
+            })
+        return cls.create(values)
 

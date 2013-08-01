@@ -213,31 +213,19 @@ this repository contains the full copyright notices and license terms. -->
       <field name="perm_delete" eval="False"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mailbox_line1">
-      <field name="field" 
-             search="[('name', '=', 'user'), ('model.model', '=', 'electronic_mail.mailbox')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('user', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mailbox"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mailbox_line2">
-      <field name="field" 
-        search="[('name', '=', 'read_users'), ('model.model', '=', 'electronic_mail.mailbox')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('read_users', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mailbox"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mailbox_line3">
-      <field name="field" 
-        search="[('name', '=', 'write_users'), ('model.model', '=', 'electronic_mail.mailbox')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('write_users', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mailbox"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mailbox_line4">
-      <field name="field" 
-        search="[('name', '=', 'create_uid'), ('model.model', '=', 'electronic_mail.mailbox')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('create_uid', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mailbox"/>
     </record>
 
@@ -252,24 +240,15 @@ this repository contains the full copyright notices and license terms. -->
       <field name="perm_delete" eval="False"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mail_line1">
-      <field name="field" 
-        search="[('name', '=', 'mailbox_owner'), ('model.model', '=', 'electronic_mail')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('mailbox_owner', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mail"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mail_line2">
-      <field name="field" 
-        search="[('name', '=', 'mailbox_read_users'), ('model.model', '=', 'electronic_mail')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('mailbox_read_users', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mail"/>
     </record>
     <record model="ir.rule" id="rule_group_read_mail_line3">
-      <field name="field" 
-        search="[('name', '=', 'mailbox_write_users'), ('model.model', '=', 'electronic_mail')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('mailbox_write_users', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_read_mail"/>
     </record>
 
@@ -284,17 +263,11 @@ this repository contains the full copyright notices and license terms. -->
       <field name="perm_delete" eval="True"/>
     </record>
     <record model="ir.rule" id="rule_group_write_mail_line1">
-      <field name="field" 
-        search="[('name', '=', 'mailbox_owner'), ('model.model', '=', 'electronic_mail')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('mailbox_owner', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_write_mail"/>
     </record>
     <record model="ir.rule" id="rule_group_write_mailbox_line2">
-      <field name="field" 
-        search="[('name', '=', 'mailbox_write_users'), ('model.model', '=', 'electronic_mail')]"/>
-      <field name="operator">=</field>
-      <field name="operand">User</field>
+      <field name="domain">[('mailbox_write_users', '=', user.id)]</field>
       <field name="rule_group" ref="rule_group_write_mail"/>
     </record>
   </data>

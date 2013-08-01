@@ -52,12 +52,12 @@ class ElectronicMailTestCase(unittest.TestCase):
             'electronic_mail', 'group_email_user')
 
         return self.User.create(
-            {
+            [{
             'login': name,
             'name': name,
             'password': name,
             'groups': [('set', [group_email_admin_id, group_email_user_id])]
-            })
+            }])
 
     def create_users(self, no_of_sets=1):
         """
@@ -71,7 +71,7 @@ class ElectronicMailTestCase(unittest.TestCase):
         for iteration in xrange(1, no_of_sets + 1):
             created_users.append(
                 tuple([
-                    self.create_user(user_type % iteration).id \
+                    self.create_user(user_type % iteration)[0].id \
                         for user_type in USER_TYPES
                 ])
             )
@@ -95,21 +95,21 @@ class ElectronicMailTestCase(unittest.TestCase):
             user_set_1, user_set_2 = self.create_users(no_of_sets=2)
             # Create a mailbox with a user set
             self.Mailbox.create(
-                {
+                [{
                     'name': 'Parent Mailbox',
                     'user': user_set_1[0],
                     'read_users': [('set', [user_set_1[1]])],
                     'write_users': [('set', [user_set_1[2]])],
-                    })
+                    }])
 
             # Create a mailbox 2 with RW users of set 1 + set 2
             self.Mailbox.create(
-                {
+                [{
                     'name': 'Child Mailbox',
                     'user': user_set_2[0],
                     'read_users': [('set', [user_set_1[1], user_set_2[1]])],
                     'write_users': [('set', [user_set_1[2], user_set_2[2]])],
-                    })
+                    }])
 
             # Directly test the mailboxes each user has access to
             expected_results = {
@@ -141,33 +141,33 @@ class ElectronicMailTestCase(unittest.TestCase):
         """
         with Transaction().start(DB_NAME, USER, CONTEXT) as transaction:
             user_o, user_r, user_w = self.create_users(no_of_sets=1)[0]
-            mailbox = self.Mailbox.create(
-                {
+            mailbox, = self.Mailbox.create(
+                [{
                     'name': 'Mailbox',
                     'user': user_o,
                     'read_users': [('set', [user_r])],
                     'write_users': [('set', [user_w])],
-                    })
+                    }])
 
             # Raise exception when writing a mail with the read user
             with Transaction().set_user(user_r):
                 self.assertRaises(
                     Exception, self.Mail.create,
-                    ({
+                    ([{
                         'from_': 'Test',
                         'mailbox': mailbox
-                        },))
+                        }],))
 
             # Creating mail with the write user
             with Transaction().set_user(user_w):
                 self.assert_(
-                    self.Mail.create({'from_': 'Test', 'mailbox': mailbox})
+                    self.Mail.create([{'from_': 'Test', 'mailbox': mailbox}])
                 )
 
             # Create an email as mailbox owner
             with Transaction().set_user(user_o):
                 self.assert_(
-                    self.Mail.create({'from_': 'Test', 'mailbox': mailbox})
+                    self.Mail.create([{'from_': 'Test', 'mailbox': mailbox}])
                 )
 
             transaction.cursor.rollback()
@@ -205,13 +205,13 @@ class ElectronicMailTestCase(unittest.TestCase):
         message.attach(part2)
 
         with Transaction().start(DB_NAME, USER, CONTEXT):
-            mailbox = self.Mailbox.create(
-                {
+            mailbox, = self.Mailbox.create(
+                [{
                     'name': 'Mailbox',
                     'user': USER,
                     'read_users': [('set', [USER])],
                     'write_users': [('set', [USER])],
-                    })
+                    }])
             mail = self.Mail.create_from_email(message, mailbox)
 
             self.assertEqual(mail.subject, message['Subject'])
